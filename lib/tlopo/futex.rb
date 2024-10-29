@@ -25,6 +25,7 @@ module Tlopo
     def release
       @fh.flock File::LOCK_UN
       @fh.close
+      rescue IOError
     end
 
     def synchronize
