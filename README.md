@@ -1,34 +1,83 @@
-# Tlopo::Futex
+# TLOPO-Futex
 
-TODO: Delete this and the text below, and describe your gem
+**tlopo-futex** is a Ruby gem providing a simple interface for file-based locking. It enables mutual exclusion between processes to ensure safe access to shared resources.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tlopo/futex`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Features
+
+- File-based locking mechanism
+- `lock`, `release`, and `synchronize` methods for efficient, non-blocking resource handling
+- Lightweight and reliable
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
+```ruby
+gem 'tlopo-futex'
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+Then run:
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+```bash
+bundle install
+```
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+Or install directly with:
+
+```bash
+gem install tlopo-futex
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+### Basic Lock and Unlock Example
 
-## Development
+```ruby
+require 'tlopo/futex'
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+# Initialize the lock with a path to a lock file
+lock = Tlopo::Futex.new('/tmp/my_lock_file')
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+# Lock, execute critical code, then release
+lock.lock
+# Critical section code goes here
+lock.release
+```
+
+### Checking Lock Status
+
+You can check if the lock is currently active:
+
+```ruby
+if lock.locked?
+  puts "Resource is locked by another process"
+else
+  lock.lock
+  # Critical section code
+  lock.release
+end
+```
+
+### Using `synchronize` for Automatic Locking
+
+The `synchronize` method locks and releases automatically, ensuring that the lock is properly released even if an error occurs.
+
+```ruby
+lock.synchronize do
+  # Critical section code that needs exclusive access
+end
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/tlopo-futex. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/tlopo-futex/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at [https://github.com/tlopo-ruby/tlopo-futex](https://github.com/tlopo-ruby/tlopo-futex).
+
+## License
+
+This gem is available under the MIT License.
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/tlopo-ruby/tlopo-futex. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/tlopo-ruby/tlopo-futex/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
